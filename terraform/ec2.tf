@@ -15,9 +15,13 @@ data "aws_ami" "ubuntu" {
 }
 
 resource "aws_instance" "controlplane" {
-  ami           = data.aws_ami.ubuntu.id
-  instance_type = "t3.micro"
+  ami                         = data.aws_ami.ubuntu.id
+  instance_type               = "t3.micro"
+  key_name                    = aws_key_pair.cluster_key.key_name
+  security_groups             = ["${aws_security_group.this.id}"]
+  associate_public_ip_address = true
 
+  subnet_id = aws_subnet.subnet.id
   tags = {
     Name = "controlplane"
   }
@@ -27,6 +31,7 @@ resource "aws_instance" "node01" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = "t3.micro"
 
+  subnet_id = aws_subnet.subnet.id
   tags = {
     Name = "node01"
   }
@@ -36,6 +41,7 @@ resource "aws_instance" "node02" {
   ami           = data.aws_ami.ubuntu.id
   instance_type = "t3.micro"
 
+  subnet_id = aws_subnet.subnet.id
   tags = {
     Name = "node02"
   }

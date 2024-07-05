@@ -8,7 +8,8 @@ resource "tls_private_key" "cluster_key" {
   rsa_bits  = 4096
 }
 
-resource "local_file" "cluster_key" {
-  content  = tls_private_key.rsa.private_key_pem
-  filename = "${aws_key_pair.cluster_key.key_name}.pem"
+resource "local_sensitive_file" "cluster_key" {
+  content         = tls_private_key.cluster_key.private_key_pem
+  filename        = "../${aws_key_pair.cluster_key.key_name}.pem"
+  file_permission = "600"
 }
