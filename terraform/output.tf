@@ -1,4 +1,6 @@
-output "master_node_ip" {
-  value = aws_instance.controlplane.public_ip
+output "node_ips" {
+  value = {
+    for _, instance in aws_spot_instance_request.instances : instance.tags.Name => instance.public_ip
+  }
 }
 
